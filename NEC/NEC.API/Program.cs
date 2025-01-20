@@ -1,4 +1,5 @@
 
+using NEC.API.Repositories;
 using Serilog;
 using Serilog.Events;
 /**
@@ -95,6 +96,8 @@ try
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
+
+    builder.Services.AddScoped<IRepository, EmployeeRepository>();   // Registering IRepository Of EmployeeRepository
 
     var app = builder.Build();
 
