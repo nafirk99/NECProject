@@ -2,35 +2,42 @@
 using Serilog;
 using Serilog.Events;
 /**
- * @author:     Nafiz Imtiaz Khan
- * @since:      14/1/2025
- * @description:
- *      Implements Bootstrap Logging for immediate log capturing,
- *      Bootstrap Logger used When normal loggers failing to capture errors
- *      during application startup.
- *      Reads appsettings configuration from a directory manually
- *      before `appsettings.json` is fully loaded.
- */
+* Bootstrap Logging Implementation
+* Implements Bootstrap Logging for immediate log capturing.
+* Bootstrap Logger used When normal loggers failing to capture errors
+* during application startup.
+* Reads appsettings configuration from a directory manually
+* before `appsettings.json` is fully loaded.
+* @author: Nafiz Imtiaz Khan
+* @since: 14/1/2025
+*/
 #region Bootstrap(Start) Logger Configuration
-/*@since:      16/1/2025    
- *@author:     Nafiz Imtiaz Khan
- .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-
-This method adds a JSON configuration file named "appsettings.json" to the configuration system.
-optional: false means that the file is required. If the file is not found, the application will fail to start.
-reloadOnChange: true enables automatic reloading of the configuration whenever the "appsettings.json" file is modified. 
-This is useful for dynamically updating settings without restarting the application.
+/**
+* AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+* 
+* This method adds a JSON configuration file named "appsettings.json" to the configuration system.
+* optional: false means that the file is required. If the file is not found, the application will fail to start.
+* reloadOnChange: true enables automatic reloading of the configuration whenever the "appsettings.json" file is modified. 
+* This is useful for dynamically updating settings without restarting the application.
+*
+* @author: Nafiz Imtiaz Khan
+* @since: 16/1/2025 
 */
 
-/*@since:      16/1/2025    
- *@author:     Nafiz Imtiaz Khan
- .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json", optional: true, reloadOnChange: true)
-
-This method adds another optional JSON configuration file to the system.
-Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") retrieves the current environment variable (e.g., "Development", "Staging", "Production").
-The file name is dynamically constructed based on the environment variable. For example, in the "Development" environment, it will look for "appsettings.Development.json".
-optional: true means that this file is not required. If the file is not found, the configuration system will continue without it.
-reloadOnChange: true enables automatic reloading of this file as well.
+/**
+* Adds another optional JSON configuration file to the system. 
+* 
+* Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") retrieves the current environment variable (e.g., "Development", "Staging", "Production").
+* The file name is dynamically constructed based on the environment variable. 
+* For example, in the "Development" environment, it will look for "appsettings.Development.json".
+* 
+* optional: true means that this file is not required. If the file is not found, 
+* the configuration system will continue without it.
+* 
+* reloadOnChange: true enables automatic reloading of this file as well.
+*
+* @author: Nafiz Imtiaz Khan
+* @since: 16/01/2025
 */
 
 var configuration = new ConfigurationBuilder()
@@ -43,25 +50,29 @@ Log.Logger = new LoggerConfiguration()
             .ReadFrom.Configuration(configuration)
             .CreateBootstrapLogger();
 #endregion
-/*  
- **Encapsulate Subsequent Code in a Try-Catch Block for Robust Error Handling**
- This try-catch block safeguards the application's startup process by capturing any exceptions that might arise during initialization.
- By integrating DateTime.Now within the logging mechanism, we can meticulously track the time of exception occurrence.
-*/
+
+/// <summary>
+/// Encapsulates subsequent code in a try-catch block for robust error handling.
+/// 
+/// This try-catch block safeguards the application's startup process by capturing any exceptions that might arise during initialization.
+/// By integrating DateTime.Now within the logging mechanism, we can meticulously track the time of exception occurrence.
+/// <author>Nafiz Imtiaz Khan</author>
+/// <since>16/01/2025</since>
+/// </summary>
 try
 {
     Log.Information($"Application Starting.... Start_Time: {DateTime.Now}");
     var builder = WebApplication.CreateBuilder(args);
 
     /**
-    * @author:     Nafiz Imtiaz Khan
-    * @since:      14/1/2025
-    * @description:
-    *      Implements a file logger to capture errors and information 
-    *      within controllers. 
-    *      This logger leverages pre-configured Serilog settings, 
-    *      eliminating the need for additional configuration.
-    *      All logs will be written to the file after the application starts.
+    * File Logger Implementation for Controllers
+    * Implements a file logger to capture errors and information
+    * within controllers.
+    * This logger leverages pre-configured Serilog settings,
+    * eliminating the need for additional configuration.
+    * All logs will be written to the file after the application starts.
+    * @author: Nafiz Imtiaz Khan
+    * @since: 14/1/2025
     */
 
     #region Serilog General Configuration
