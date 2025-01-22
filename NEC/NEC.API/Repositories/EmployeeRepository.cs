@@ -41,8 +41,47 @@ namespace NEC.API.Repositories
          * @author: Nafiz Imtiaz Khan
          * @since: 20/1/2025
          */
-        public async Task<bool> CreateAsync(Employee employee)
+        //public async Task<bool> CreateAsync(Employee employee)
+        //{
+        //    int id = 0;
+        //    using (var connection = new SqlConnection(GetConnectionString()))
+        //    {
+        //        await connection.OpenAsync(); // Open the connection asynchronously
+
+        //        using (var command = connection.CreateCommand())
+        //        {
+        //            command.CommandType = CommandType.StoredProcedure;
+        //            command.CommandText = "[DBO].[usp_Insert_Employee]";
+        //            command.Parameters.AddWithValue("@Name", employee.tx_name);
+        //            command.Parameters.AddWithValue("@Age", employee.id_age);
+        //            command.Parameters.AddWithValue("@Date_Of_Birth", employee.dt_date_of_birth);
+        //            command.Parameters.AddWithValue("@Salary", employee.dec_salary);
+        //            command.Parameters.AddWithValue("@Join_Date", employee.dt_join_date);
+        //            command.Parameters.AddWithValue("@Email", employee.tx_email);
+        //            command.Parameters.AddWithValue("@Phone_No", employee.tx_phone_no);
+
+        //            id = await command.ExecuteNonQueryAsync(); // ExecuteNonQuery asynchronously
+        //        }
+        //    }
+
+        //    return id == 0 ? false : true;
+        //}
+
+        //------------------------------------------------------------------------------------------------------------------------
+        public async Task<bool> CreateAsync(CreateDTO createDTO)
         {
+            // Converting From DTO to Domain Model
+            var employee = new Employee
+            {
+                tx_name = createDTO.tx_name,
+                id_age = createDTO.id_age,
+                dt_date_of_birth = createDTO.dt_date_of_birth,
+                dec_salary = createDTO.dec_salary,
+                dt_join_date = createDTO.dt_join_date,
+                tx_email = createDTO.tx_email,
+                tx_phone_no = createDTO.tx_phone_no
+            };
+
             int id = 0;
             using (var connection = new SqlConnection(GetConnectionString()))
             {
@@ -66,6 +105,10 @@ namespace NEC.API.Repositories
 
             return id == 0 ? false : true;
         }
+
+
+
+
 
         /**
          * Deletes an Employee Record from the Database
@@ -122,6 +165,7 @@ namespace NEC.API.Repositories
                         {
                             Employee employee = new Employee();
                             employee.id_employee_key = Convert.ToInt32(reader["id_employee_key"]);
+                            employee.id_employee_ver = Convert.ToInt32(reader["id_employee_ver"]);  //reader["id_employee_ver"] == DBNull.Value ? 0: Convert.ToInt32(reader["id_employee_ver"]);
                             employee.dtt_created = Convert.ToDateTime(reader["dtt_created"]);
                             employee.dtt_updated = reader["dtt_updated"] == DBNull.Value ? DateTime.MinValue : Convert.ToDateTime(reader["dtt_updated"]);
                             employee.tx_name = reader["tx_name"].ToString();
@@ -198,8 +242,52 @@ namespace NEC.API.Repositories
         * @author: Nafiz Imtiaz Khan
         * @since: 20/1/2025
         */
-        public async Task<bool> UpdateAsync(Employee employee)
+        //public async Task<bool> UpdateAsync(Employee employee)
+        //{
+        //    Employee existingEmployee = await GetByIdAsync(employee.id_employee_key);
+        //    int rowsAffected = 0;
+
+        //    if (existingEmployee != null)
+        //    {
+        //        using (var connection = new SqlConnection(GetConnectionString()))
+        //        {
+        //            await connection.OpenAsync(); // Open the connection asynchronously
+
+        //            using (var command = connection.CreateCommand())
+        //            {
+        //                command.CommandType = CommandType.StoredProcedure;
+        //                command.CommandText = "[dbo].[usp_Update_Employee]";
+        //                command.Parameters.AddWithValue("@Id", employee.id_employee_key);
+        //                command.Parameters.AddWithValue("@Name", employee.tx_name);
+        //                command.Parameters.AddWithValue("@Age", employee.id_age);
+        //                command.Parameters.AddWithValue("@Date_Of_Birth", employee.dt_date_of_birth);
+        //                command.Parameters.AddWithValue("@Salary", employee.dec_salary);
+        //                command.Parameters.AddWithValue("@Join_Date", employee.dt_join_date);
+        //                command.Parameters.AddWithValue("@Email", employee.tx_email);
+        //                command.Parameters.AddWithValue("@Phone_No", employee.tx_phone_no);
+
+        //                rowsAffected = await command.ExecuteNonQueryAsync(); // ExecuteNonQueryAsync is asynchronous
+        //            }
+        //        }
+        //    }
+        //    return rowsAffected == 0 ? false : true;  // Return true if at least one row was affected
+        //}
+
+        //------------------------------------------------------------------------------------------------------------------------------
+        public async Task<bool> UpdateAsync(UpdateDTO updateDTO)
         {
+            var employee = new Employee()
+            {
+                id_employee_key = updateDTO.id_employee_key,
+                tx_name = updateDTO.tx_name,
+                id_age = updateDTO.id_age,
+                dt_date_of_birth = updateDTO.dt_date_of_birth,
+                dec_salary = updateDTO.dec_salary,
+                dt_join_date = updateDTO.dt_join_date,
+                tx_email = updateDTO.tx_email,
+                tx_phone_no=updateDTO.tx_phone_no
+            };
+
             Employee existingEmployee = await GetByIdAsync(employee.id_employee_key);
             int rowsAffected = 0;
 
@@ -228,5 +316,8 @@ namespace NEC.API.Repositories
             }
             return rowsAffected == 0 ? false : true;  // Return true if at least one row was affected
         }
+
+
+
     }
 }

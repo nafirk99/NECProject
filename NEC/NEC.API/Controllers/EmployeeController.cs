@@ -96,14 +96,14 @@ namespace NEC.API.Controllers
         /// <param name="employee">The employee object to create.</param>
         /// <returns>An IActionResult indicating the result of the operation.</returns>
         [HttpPost("Create")]
-        public async Task<IActionResult> Create(Employee employee)
+        public async Task<IActionResult> Create(CreateDTO createDTO)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest("Model Data Is Invalid");
             }
 
-            var result = await _repository.CreateAsync(employee);
+            var result = await _repository.CreateAsync(createDTO);
             _logger.LogInformation("New Employee Created");
             return Ok(result);
         }
@@ -139,10 +139,10 @@ namespace NEC.API.Controllers
         /// <param name="employee">The updated employee object.</param>
         /// <returns>An IActionResult indicating the result of the operation.</returns>
         [HttpPut("Update")]
-        public async Task<IActionResult> Update(Employee employee)
+        public async Task<IActionResult> Update(UpdateDTO updateDTO)
         {
-            var result = await _repository.UpdateAsync(employee);
-            _logger.LogInformation($"Updated: {employee.id_employee_key} no Employee ");
+            var result = await _repository.UpdateAsync(updateDTO);
+            _logger.LogInformation($"Updated: {updateDTO.id_employee_key} no Employee ");
             return Ok(result);
         }
 
